@@ -21,6 +21,14 @@ interface BlogFormData {
   category: string
   tags: string
   featuredImage: string
+  authorId: string; // Add authorId to the form data
+}
+
+interface Author {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 function AddBlogContent() {
@@ -30,7 +38,8 @@ function AddBlogContent() {
   const [uploadingImage, setUploadingImage] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [blogId, setBlogId] = useState<string | null>(null)
-  
+  const [authors, setAuthors] = useState<Author[]>([]); // State to store fetched authors
+
   // Featured image
   const [featuredImageFile, setFeaturedImageFile] = useState<File | null>(null)
   const [featuredImagePreview, setFeaturedImagePreview] = useState<string>("")
@@ -42,8 +51,36 @@ function AddBlogContent() {
     content: "",
     category: "",
     tags: "",
-    featuredImage: ""
+    featuredImage: "",
+    authorId: "", // Initialize authorId
   })
+
+  // Fetch authors on component mount
+  useEffect(() => {
+    const fetchAuthors = async () => {
+      try {
+        const token = localStorage.getItem('adminToken');
+        if (!token) return;
+
+        const response = await fetch('/api/admin/users', { // Assuming an API route to get admin users
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setAuthors(data.users.filter((user: any) => user.role === 'ADMIN')); // Filter for admin users
+          // If editing and authorId is not set, set the default to the first admin or current post author
+          if (!isEditing && data.users.length > 0) {
+            setFormData(prev => ({ ...prev, authorId: data.users.filter((user: any) => user.role === 'ADMIN')[0]?.id || "" }));
+          }
+        } else {
+          console.error("Failed to fetch authors");
+        }
+      } catch (error) {
+        console.error("Error fetching authors:", error);
+      }
+    };
+    fetchAuthors();
+  }, [isEditing]);
 
   useEffect(() => {
     const id = searchParams.get('id')
@@ -76,7 +113,8 @@ function AddBlogContent() {
           content: data.content || "",
           category: data.category || "",
           tags: data.tags ? data.tags.join(', ') : "",
-          featuredImage: data.featuredImage || "" // This will be set as existing URL
+          featuredImage: data.featuredImage || "", // This will be set as existing URL
+          authorId: data.authorId || "", // Set existing authorId
         })
         setFeaturedImageExistingUrl(data.featuredImage || null)
       } else {
@@ -166,8 +204,8 @@ function AddBlogContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!formData.title.trim() || !formData.content.trim()) {
-      toast.error("Title and content are required")
+    if (!formData.title.trim() || !formData.content.trim() || !formData.authorId) {
+      toast.error("Title, content, and author are required")
       return
     }
 
@@ -288,9 +326,27 @@ function AddBlogContent() {
                   placeholder="Write your blog post content here..."
                 />
               </div>
+
+              <div>
+                <Label htmlFor="author">Author *</Label>
+                <Select
+                  value={formData.authorId}
+                  onValueChange={(value) => handleInputChange('authorId', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select author" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {authors.map((author) => (
+                      <SelectItem key={author.id} value={author.id}>
+                        {author.firstName} {author.lastName} ({author.email})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </CardContent>
           </Card>
-
           {/* SEO & Settings */}
           <Card>
             <CardHeader>
