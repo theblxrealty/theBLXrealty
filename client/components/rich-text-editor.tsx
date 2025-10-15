@@ -1,12 +1,8 @@
 "use client";
 
-import React, { useState, useRef, useMemo, useEffect } from "react";
-import dynamic from "next/dynamic";
-// @ts-ignore
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-// import "react-quill/dist/quill.snow.css"; // Moved to global CSS
+import React, { useState, useRef, useEffect } from "react";
+import { Editor } from "@tinymce/tinymce-react";
 import { toast } from "sonner";
-import Image from "next/image"; // For preview purposes if needed
 
 interface RichTextEditorProps {
   value: string;
@@ -19,115 +15,78 @@ export default function RichTextEditor({
   onChange,
   placeholder,
 }: RichTextEditorProps) {
-  const quillRef = useRef<ReactQuill>(null);
+  const editorRef = useRef<any>(null);
   const [editorContent, setEditorContent] = useState(value);
 
   useEffect(() => {
     setEditorContent(value);
   }, [value]);
 
-  const imageHandler = () => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-
-    input.onchange = async () => {
-      const file = input.files ? input.files[0] : null;
-      if (file) {
-        const formData = new FormData();
-        formData.append("file", file);
-
-        try {
-          const adminToken = localStorage.getItem("adminToken");
-          if (!adminToken) {
-            toast.error("Admin authentication required for image upload.");
-            return;
-          }
-
-          const response = await fetch("/api/upload-image", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${adminToken}`,
-            },
-            body: formData,
-          });
-
-          const result = await response.json();
-
-          if (response.ok && result.success) {
-            const range = quillRef.current?.getEditor().getSelection(true);
-            const quill = quillRef.current?.getEditor();
-            if (quill && range) {
-              quill.insertEmbed(range.index, "image", result.url);
-              quill.setSelection(range.index + 1);
-            }
-            toast.success("Image uploaded successfully!");
-          } else {
-            toast.error(result.error || "Image upload failed.");
-          }
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          toast.error("Failed to upload image.");
-        }
-      }
-    };
+  const handleEditorChange = (content: string) => {
+    setEditorContent(content);
+    onChange(content);
   };
 
-  const modules = useMemo(
-    () => ({
-      toolbar: {
-        container: [
-          [{ header: [1, 2, false] }],
-          ["bold", "italic", "underline", "strike", "blockquote"],
-          [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
-          ],
-          ["link", "image"],
-          ["clean"],
-        ],
-        handlers: {
-          image: imageHandler,
-        },
-      },
-      clipboard: {
-        matchVisual: false, // This will ensure that formatting is maintained when pasting
-      },
-    }),
-    []
-  );
+  // TinyMCE image upload handler
+  const handleImageUpload = async (blobInfo: any, progress: any) => {
+    return new Promise((resolve, reject) => {
+      const file = blobInfo.blob();
+      const formData = new FormData();
+      formData.append("file", file);
 
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-  ];
+      const adminToken = localStorage.getItem("adminToken");
+      if (!adminToken) {
+        toast.error("Admin authentication required for image upload.");
+        reject("Admin authentication required");
+        return;
+      }
+
+      fetch("/api/upload-image", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.success && result.url) {
+            toast.success("Image uploaded successfully!");
+            resolve(result.url);
+          } else {
+            toast.error(result.error || "Image upload failed.");
+            reject(result.error || "Image upload failed.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error uploading image:", error);
+          toast.error("Failed to upload image.");
+          reject("Image upload failed");
+        });
+    });
+  };
 
   return (
     <div className="bg-white rounded-md shadow-sm">
-      <ReactQuill
-        ref={quillRef}
-        theme="snow"
+      <Editor
+        apiKey="YOUR_TINYMCE_API_KEY" // Replace with your TinyMCE API key
+        onInit={(evt, editor) => (editorRef.current = editor)}
         value={editorContent}
-        onChange={(content) => {
-          setEditorContent(content);
-          onChange(content);
+        onEditorChange={handleEditorChange}
+        init={{
+          height: 500,
+          menubar: false,
+          plugins:
+            "advlist autolink lists link image charmap preview anchor " +
+            "searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount",
+          toolbar:
+            "undo redo | formatselect | bold italic backcolor | " +
+            "alignleft aligncenter alignright alignjustify | " +
+            "bullist numlist outdent indent | removeformat | link image | help",
+          content_style:
+            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+          images_upload_handler: handleImageUpload,
         }}
-        modules={modules}
-        formats={formats}
-        placeholder={placeholder}
-        className="h-72" // Adjust height as needed
       />
     </div>
   );
