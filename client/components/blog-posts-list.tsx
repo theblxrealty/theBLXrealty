@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Edit, Trash2, Eye, Calendar, User } from "lucide-react"
 import { toast } from "sonner"
+import Link from "next/link"
 
 interface BlogPost {
   id: string
@@ -176,13 +177,14 @@ export default function BlogPostsList() {
                   >
                     {post.isPublished ? "Unpublish" : "Publish"}
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(`/blog/${post.slug}`, '_blank')}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
+                  <Link href={`/blog/${post.slug}`}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </Link>
                   <Button
                     variant="outline"
                     size="sm"

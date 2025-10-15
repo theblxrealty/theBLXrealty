@@ -50,17 +50,6 @@ export default function BlogPostPage() {
         
         if (data.posts && data.posts.length > 0) {
           const blogPost = data.posts[0]
-          
-          // Check if the post has a redirect URL
-          if (blogPost.redirectUrl) {
-            // Show redirecting message and redirect to external URL
-            setRedirecting(true)
-            setTimeout(() => {
-              window.location.href = blogPost.redirectUrl
-            }, 2000) // 2 second delay to show the message
-            return
-          }
-          
           setPost(blogPost)
         } else {
           setError('Blog post not found')
