@@ -150,108 +150,101 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <Link href="/blog">
-            <Button variant="outline" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Blog
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Blog Post Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <article className="max-w-4xl mx-auto">
-          {/* Featured Image */}
-          {post.featuredImage && (
-            <div className="relative h-96 w-full mb-8 rounded-lg overflow-hidden bg-gray-200">
-              <Image
-                src={post.featuredImage}
-                alt={post.title}
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-                priority
-              />
-            </div>
-          )}
-
-          {/* Post Header */}
-          <header className="mb-8">
-            {post.category && (
-              <div className="mb-4">
-                <span className="inline-block bg-red-100 text-red-800 text-sm px-3 py-1 rounded-full font-medium">
+      {/* Hero Section with Featured Image and Title */}
+      {post.featuredImage && (
+        <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden group">
+          <Image
+            src={post.featuredImage}
+            alt={post.title}
+            fill
+            className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            sizes="100vw"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/40 flex items-end justify-start p-8 md:p-16">
+            <div className="text-white max-w-4xl">
+              {post.category && (
+                <span className="inline-block bg-red-600 text-white text-sm px-3 py-1 rounded-full font-medium mb-2">
                   {post.category}
                 </span>
-              </div>
-            )}
-
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900" style={{fontFamily: 'Tiempos Headline, serif', fontWeight: '400'}}>
-              {post.title}
-            </h1>
-
-            {post.excerpt && (
-              <p className="text-xl text-gray-600 mb-6 font-['Suisse_Intl',sans-serif] leading-relaxed">
-                {post.excerpt}
-              </p>
-            )}
-
-            <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center">
+              )}
+              <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight font-tiempos">
+                {post.title}
+              </h1>
+              <div className="flex flex-wrap items-center text-sm text-gray-200">
+                <div className="flex items-center mr-4 mb-2">
                   <Calendar className="h-4 w-4 mr-1" />
-                  {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : new Date(post.createdAt).toLocaleDateString()}
+                  <span>{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center mb-2">
                   <User className="h-4 w-4 mr-1" />
-                  {post.author.firstName} {post.author.lastName}
+                  <span>{post.author.firstName} {post.author.lastName}</span>
                 </div>
-              </div>
-
-              {/* Share Buttons */}
-              <div className="flex items-center space-x-2">
-                <span className="text-gray-500">Share:</span>
-                {shareLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 text-gray-500 hover:text-red-600 transition-colors"
-                  >
-                    <link.icon className="h-4 w-4" />
-                  </a>
-                ))}
               </div>
             </div>
+          </div>
+        </div>
+      )}
 
-            {/* Tags */}
-            {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6">
-                {post.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
-                  >
-                    <Tag className="h-3 w-3 mr-1" />
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </header>
+      {/* Main Content Area */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <article className="max-w-4xl mx-auto">
+          {/* Excerpt (Moved below hero if it exists) */}
+          {post.excerpt && (
+            <p className="text-xl text-gray-600 mb-8 font-suisse leading-relaxed text-center">
+              {post.excerpt}
+            </p>
+          )}
+
+          {/* Share Buttons (Moved here for better visibility) */}
+          <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 mb-8">
+            <span className="font-medium">Share this article:</span>
+            {shareLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-gray-500 hover:text-red-600 transition-colors"
+              >
+                <link.icon className="h-5 w-5" />
+              </a>
+            ))}
+          </div>
+          
+          {/* Back to Blog Button (Moved below hero) */}
+          <div className="text-center mb-8">
+            <Link href="/blog">
+              <Button variant="outline" className="">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Blog Posts
+              </Button>
+            </Link>
+          </div>
 
           {/* Post Content */}
           <div className="prose prose-lg max-w-none mb-8">
             <div 
-              className="text-gray-700 leading-relaxed font-['Suisse_Intl',sans-serif] whitespace-pre-wrap"
+              className="text-gray-700 leading-relaxed font-['Suisse_Intl',sans-serif]"
               dangerouslySetInnerHTML={{ __html: post.content }}
             >
             </div>
           </div>
+
+          {/* Tags */}
+          {post.tags && post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-8 justify-center border-t pt-8">
+              {post.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                >
+                  <Tag className="h-3 w-3 mr-1" />
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Author Bio */}
           <div className="border-t pt-8">
