@@ -3,8 +3,15 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import dynamic from "next/dynamic";
 // @ts-ignore
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-import "react-quill/dist/quill.snow.css"; // import styles
+const ReactQuill = dynamic(
+  async () => {
+    const { default: RQ } = await import("react-quill");
+    // @ts-ignore
+    await import("react-quill/dist/quill.snow.css");
+    return RQ;
+  },
+  { ssr: false }
+);
 import { toast } from "sonner";
 import Image from "next/image"; // For preview purposes if needed
 
