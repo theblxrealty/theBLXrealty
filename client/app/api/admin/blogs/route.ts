@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
       title,
       excerpt,
       content,
-      redirectUrl,
       category,
       tags,
       featuredImage
@@ -91,7 +90,6 @@ export async function POST(request: NextRequest) {
           excerpt: excerpt?.trim(),
           content: content.trim(),
           featuredImage: featuredImageUrl,
-          redirectUrl: redirectUrl?.trim(),
           category: category?.trim(),
           tags: tagsArray,
           authorId: decoded.id,

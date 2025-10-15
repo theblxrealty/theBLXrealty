@@ -14,7 +14,6 @@ interface BlogPost {
   excerpt?: string
   content: string
   featuredImage?: string
-  redirectUrl?: string
   category?: string
   tags: string[]
   isPublished: boolean

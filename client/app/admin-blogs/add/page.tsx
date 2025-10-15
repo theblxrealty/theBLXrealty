@@ -12,12 +12,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { X, Upload, FileText, Image as ImageIcon } from "lucide-react"
 // Removed direct uploadImage import - using API route instead
 import { toast } from "sonner"
+import RichTextEditor from "@/components/rich-text-editor"
 
 interface BlogFormData {
   title: string
   excerpt: string
   content: string
-  redirectUrl: string
   category: string
   tags: string
   featuredImage: string
@@ -40,7 +40,6 @@ function AddBlogContent() {
     title: "",
     excerpt: "",
     content: "",
-    redirectUrl: "",
     category: "",
     tags: "",
     featuredImage: ""
@@ -75,7 +74,6 @@ function AddBlogContent() {
           title: data.title || "",
           excerpt: data.excerpt || "",
           content: data.content || "",
-          redirectUrl: data.redirectUrl || "",
           category: data.category || "",
           tags: data.tags ? data.tags.join(', ') : "",
           featuredImage: data.featuredImage || "" // This will be set as existing URL
@@ -284,13 +282,10 @@ function AddBlogContent() {
 
               <div>
                 <Label htmlFor="content">Content *</Label>
-                <Textarea
-                  id="content"
+                <RichTextEditor
                   value={formData.content}
-                  onChange={(e) => handleInputChange('content', e.target.value)}
+                  onChange={(content) => handleInputChange('content', content)}
                   placeholder="Write your blog post content here..."
-                  rows={10}
-                  required
                 />
               </div>
             </CardContent>
@@ -302,19 +297,7 @@ function AddBlogContent() {
               <CardTitle>SEO & Settings</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div>
-                <Label htmlFor="redirectUrl">Redirect URL</Label>
-                <Input
-                  id="redirectUrl"
-                  type="url"
-                  value={formData.redirectUrl}
-                  onChange={(e) => handleInputChange('redirectUrl', e.target.value)}
-                  placeholder="https://example.com/external-article"
-                />
-                <p className="text-sm text-gray-500 mt-1">
-                  If provided, visitors will be redirected to this external URL
-                </p>
-              </div>
+              {/* Removed Redirect URL */}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>

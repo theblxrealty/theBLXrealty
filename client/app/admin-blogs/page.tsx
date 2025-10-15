@@ -26,7 +26,6 @@ interface BlogPost {
   excerpt?: string
   content: string
   featuredImage?: string
-  redirectUrl?: string
   category?: string
   tags: string[]
   isPublished: boolean
@@ -158,7 +157,7 @@ export default function AdminBlogsPage() {
             <p className="text-gray-600">Manage all your blog posts</p>
           </div>
           <div className="flex gap-4">
-            <Button onClick={() => router.push('/addblog')} className="bg-blue-500 hover:bg-blue-600">
+            <Button onClick={() => router.push('/admin-blogs/add')} className="bg-blue-500 hover:bg-blue-600">
               <FileText className="h-4 w-4 mr-2" />
               Add Blog Post
             </Button>
@@ -174,7 +173,7 @@ export default function AdminBlogsPage() {
             <CardContent className="text-center py-12">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500 text-lg mb-4">No blog posts found</p>
-              <Button onClick={() => router.push('/addblog')} className="bg-blue-500 hover:bg-blue-600">
+              <Button onClick={() => router.push('/admin-blogs/add')} className="bg-blue-500 hover:bg-blue-600">
                 Create Your First Blog Post
               </Button>
             </CardContent>
@@ -258,7 +257,7 @@ export default function AdminBlogsPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => router.push(`/addblog?id=${post.id}`)}
+                      onClick={() => router.push(`/admin-blogs/add?id=${post.id}`)}
                       className="flex-1"
                     >
                       <Edit className="h-4 w-4 mr-1" />
@@ -281,12 +280,7 @@ export default function AdminBlogsPage() {
                     </Button>
                   </div>
 
-                  {/* Redirect URL if exists */}
-                  {post.redirectUrl && (
-                    <div className="text-xs text-blue-600 pt-2 border-t">
-                      <p className="truncate">Redirects to: {post.redirectUrl}</p>
-                    </div>
-                  )}
+                  {/* Removed Redirect URL if exists */}
                 </CardContent>
               </Card>
             ))}
