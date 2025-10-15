@@ -75,7 +75,7 @@ export default function RichTextEditor({
   return (
     <div className="bg-white rounded-md shadow-sm">
       <Editor
-        apiKey="YOUR_TINYMCE_API_KEY" // Replace with your TinyMCE API key
+        apiKey="toi4j2xa3a67z9t9p73wij2hklpbv2v4ult92rrzhv12cv00" // Replace with your TinyMCE API key
         onInit={(evt, editor) => (editorRef.current = editor)}
         value={editorContent}
         onEditorChange={handleEditorChange}
