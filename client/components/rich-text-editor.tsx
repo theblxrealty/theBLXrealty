@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useMemo, useEffect } from "react";
-import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
+// @ts-ignore
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css"; // import styles
 import { toast } from "sonner";
 import Image from "next/image"; // For preview purposes if needed
