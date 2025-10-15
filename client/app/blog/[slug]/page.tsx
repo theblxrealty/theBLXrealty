@@ -248,8 +248,8 @@ export default function BlogPostPage() {
           <div className="prose prose-lg max-w-none mb-8">
             <div 
               className="text-gray-700 leading-relaxed font-['Suisse_Intl',sans-serif] whitespace-pre-wrap"
+              dangerouslySetInnerHTML={{ __html: post.content }}
             >
-              {post.content}
             </div>
           </div>
 
