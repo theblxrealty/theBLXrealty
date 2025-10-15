@@ -150,70 +150,25 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section with Featured Image and Title */}
+      {/* Featured Image as Hero */}
       {post.featuredImage && (
-        <div className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden group">
+        <div className="relative w-full h-[300px] md:h-[450px] lg:h-[550px] overflow-hidden">
           <Image
             src={post.featuredImage}
             alt={post.title}
             fill
-            className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            className="object-cover object-center"
             sizes="100vw"
             priority
           />
-          <div className="absolute inset-0 bg-black/40 flex items-end justify-start p-8 md:p-16">
-            <div className="text-white max-w-4xl">
-              {post.category && (
-                <span className="inline-block bg-red-600 text-white text-sm px-3 py-1 rounded-full font-medium mb-2">
-                  {post.category}
-                </span>
-              )}
-              <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight font-tiempos">
-                {post.title}
-              </h1>
-              <div className="flex flex-wrap items-center text-sm text-gray-200">
-                <div className="flex items-center mr-4 mb-2">
-                  <Calendar className="h-4 w-4 mr-1" />
-                  <span>{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : new Date(post.createdAt).toLocaleDateString()}</span>
-                </div>
-                <div className="flex items-center mb-2">
-                  <User className="h-4 w-4 mr-1" />
-                  <span>{post.author.firstName} {post.author.lastName}</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       )}
 
       {/* Main Content Area */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <article className="max-w-4xl mx-auto">
-          {/* Excerpt (Moved below hero if it exists) */}
-          {post.excerpt && (
-            <p className="text-xl text-gray-600 mb-8 font-suisse leading-relaxed text-center">
-              {post.excerpt}
-            </p>
-          )}
-
-          {/* Share Buttons (Moved here for better visibility) */}
-          <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 mb-8">
-            <span className="font-medium">Share this article:</span>
-            {shareLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 text-gray-500 hover:text-red-600 transition-colors"
-              >
-                <link.icon className="h-5 w-5" />
-              </a>
-            ))}
-          </div>
-          
-          {/* Back to Blog Button (Moved below hero) */}
-          <div className="text-center mb-8">
+          {/* Back to Blog Posts Button (Top Left) */}
+          <div className="mb-8">
             <Link href="/blog">
               <Button variant="outline" className="">
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -221,6 +176,36 @@ export default function BlogPostPage() {
               </Button>
             </Link>
           </div>
+
+          {/* Blog Post Header (Title, Category, Meta) */}
+          <header className="mb-8">
+            {post.category && (
+              <span className="inline-block bg-red-100 text-red-800 text-sm px-3 py-1 rounded-full font-medium mb-4">
+                {post.category}
+              </span>
+            )}
+
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight font-tiempos text-gray-900">
+              {post.title}
+            </h1>
+
+            <div className="flex flex-wrap items-center text-sm text-gray-500 mb-6 space-x-4">
+              <div className="flex items-center">
+                <Calendar className="h-4 w-4 mr-1" />
+                <span>{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : new Date(post.createdAt).toLocaleDateString()}</span>
+              </div>
+              <div className="flex items-center">
+                <User className="h-4 w-4 mr-1" />
+                <span>{post.author.firstName} {post.author.lastName}</span>
+              </div>
+            </div>
+
+            {post.excerpt && (
+              <p className="text-xl text-gray-600 mb-8 font-suisse leading-relaxed">
+                {post.excerpt}
+              </p>
+            )}
+          </header>
 
           {/* Post Content */}
           <div className="prose prose-lg max-w-none mb-8">
@@ -233,7 +218,7 @@ export default function BlogPostPage() {
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-8 justify-center border-t pt-8">
+            <div className="flex flex-wrap gap-2 mb-8 border-t pt-8">
               {post.tags.map((tag, index) => (
                 <span
                   key={index}
