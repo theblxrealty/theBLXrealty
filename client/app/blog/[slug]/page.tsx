@@ -230,23 +230,6 @@ export default function BlogPostPage() {
               ))}
             </div>
           )}
-
-          {/* Author Bio */}
-          <div className="border-t pt-8">
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                <User className="h-8 w-8 text-red-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {post.author.firstName} {post.author.lastName}
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Real Estate Professional at The BLX Realty
-                </p>
-              </div>
-            </div>
-          </div>
         </article>
       </div>
     </div>
