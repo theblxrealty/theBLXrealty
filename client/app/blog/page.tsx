@@ -158,7 +158,7 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
                  
 
                 {/* Quick Filter Buttons */}
-                <div className="max-w-4xl mx-auto mb-8 animate-slide-up-delay-2">
+                {/* <div className="max-w-4xl mx-auto mb-8 animate-slide-up-delay-2">
                   <div className="flex flex-wrap justify-center gap-3">
                     <button
                       type="button"
@@ -196,7 +196,7 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
                       Luxury
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
