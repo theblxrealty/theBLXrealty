@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Editor } from "@tinymce/tinymce-react";
+import dynamic from "next/dynamic";
 import { toast } from "sonner";
+
+// Dynamically import the TinyMCE Editor component
+const Editor = dynamic(() => import('@tinymce/tinymce-react').then(mod => mod.Editor), {
+  ssr: false,
+  loading: () => <p>Loading editor...</p>,
+});
 
 interface RichTextEditorProps {
   value: string;
