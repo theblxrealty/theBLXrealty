@@ -438,7 +438,7 @@ export default function Header() {
                 
                 <button
                   onClick={() => {
-                    router.push('/addblog')
+                    router.push('/admin-blogs/add')
                     setAddModalOpen(false)
                   }}
                   className="w-full flex items-center space-x-3 p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl transition-all duration-300 group"
