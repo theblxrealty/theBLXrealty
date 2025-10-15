@@ -1,14 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import dynamic from "next/dynamic";
+// import { Editor } from "@tinymce/tinymce-react"; // Remove direct import
 import { toast } from "sonner";
-
-// Dynamically import the TinyMCE Editor component
-const Editor = dynamic(() => import('@tinymce/tinymce-react').then(mod => mod.Editor), {
-  ssr: false,
-  loading: () => <p>Loading editor...</p>,
-});
 
 interface RichTextEditorProps {
   value: string;
@@ -23,6 +17,19 @@ export default function RichTextEditor({
 }: RichTextEditorProps) {
   const editorRef = useRef<any>(null);
   const [editorContent, setEditorContent] = useState(value);
+  const [isClient, setIsClient] = useState(false); // New state to track client-side rendering
+  const [TinyMCEEditor, setTinyMCEEditor] = useState<any>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+    // Conditionally import Editor on the client side
+    import("@tinymce/tinymce-react").then((mod) => {
+      setTinyMCEEditor(() => mod.Editor);
+    }).catch(error => {
+      console.error("Failed to load TinyMCE Editor:", error);
+      toast.error("Failed to load rich text editor.");
+    });
+  }, []);
 
   useEffect(() => {
     setEditorContent(value);
@@ -72,11 +79,15 @@ export default function RichTextEditor({
     });
   };
 
+  if (!isClient || !TinyMCEEditor) {
+    return <p>Loading editor...</p>;
+  }
+
   return (
     <div className="bg-white rounded-md shadow-sm">
-      <Editor
+      <TinyMCEEditor
         apiKey="toi4j2xa3a67z9t9p73wij2hklpbv2v4ult92rrzhv12cv00" // Replace with your TinyMCE API key
-        onInit={(evt, editor) => (editorRef.current = editor)}
+        onInit={(evt: any, editor: any) => (editorRef.current = editor)}
         value={editorContent}
         onEditorChange={handleEditorChange}
         init={{
