@@ -34,8 +34,7 @@ export async function POST(request: NextRequest) {
       content,
       category,
       tags,
-      featuredImage,
-      authorId // Add authorId to destructuring
+      featuredImage
     } = body
 
     // Convert tags string to array if needed
@@ -93,7 +92,7 @@ export async function POST(request: NextRequest) {
           featuredImage: featuredImageUrl,
           category: category?.trim(),
           tags: tagsArray,
-          authorId: authorId, // Use authorId from request body
+          authorId: decoded.id, // Revert to using decoded.id
           isPublished: true, // Auto-publish for admin uploads
           publishedAt: new Date()
         },

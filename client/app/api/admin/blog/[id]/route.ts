@@ -30,7 +30,6 @@ const BlogPostUpdateSchema = z.object({
   tags: z.array(z.string()).optional(),
   isPublished: z.boolean().optional(),
   publishedAt: z.string().datetime().nullable().optional(),
-  authorId: z.string().optional(), // Add authorId to schema
 }).strict()
 
 // GET - Get single blog post
@@ -114,8 +113,7 @@ export async function PUT(
       category,
       tags,
       isPublished,
-      publishedAt,
-      authorId // Add authorId to data
+      publishedAt
     } = validatedData.data
 
     // Check if slug already exists (if slug is being changed)
@@ -146,8 +144,7 @@ export async function PUT(
         category,
         tags,
         isPublished,
-        publishedAt,
-        authorId // Add authorId to data
+        publishedAt
       }
     })
 
