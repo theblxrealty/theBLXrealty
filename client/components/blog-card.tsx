@@ -72,8 +72,7 @@ export default function BlogCard({ post, priority = false }: BlogCardProps) {
   }
 
   const getAuthorName = () => {
-    if (!post.author) return "Anonymous"
-    return `${post.author.firstName} ${post.author.lastName}`
+    return "The BLX Realty"
   }
 
   return (

@@ -19,6 +19,7 @@ interface BlogPost {
   isPublished: boolean
   publishedAt?: string
   createdAt: string
+  redirectUrl?: string // Add redirectUrl here
   author: {
     id: string
     firstName?: string
@@ -196,7 +197,7 @@ export default function BlogPostPage() {
               </div>
               <div className="flex items-center">
                 <User className="h-4 w-4 mr-1" />
-                <span>{post.author.firstName} {post.author.lastName}</span>
+                <span>The BLX Realty</span>
               </div>
             </div>
 

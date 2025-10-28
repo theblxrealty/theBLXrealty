@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
+import { sendEmail } from '@/lib/email'
 
 // POST - Create a new blog post
 export async function POST(request: NextRequest) {
@@ -107,6 +108,41 @@ export async function POST(request: NextRequest) {
           }
         }
       })
+
+      // Send newsletter to subscribers
+      try {
+        const subscribers = await prisma.newsletterSubscription.findMany({
+          where: { isActive: true },
+          select: { email: true }
+        })
+
+        const blogPostUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${blogPost.slug}`
+
+        for (const subscriber of subscribers) {
+          await sendEmail({
+            to: subscriber.email,
+            subject: `New Blog Post: ${blogPost.title}`,
+            html: `
+              <h1>${blogPost.title}</h1>
+              <p>${blogPost.excerpt || 'Read our latest blog post!'}</p>
+              <a href="${blogPostUrl}">Read More</a>
+              <p>You received this email because you subscribed to our newsletter. </p>
+              <p>To unsubscribe, please visit: <a href="${process.env.NEXT_PUBLIC_BASE_URL}/newsletter/unsubscribe">Unsubscribe</a></p>
+            `
+          })
+        }
+        console.log(`Sent new blog post notification to ${subscribers.length} subscribers.`)
+      } catch (emailError) {
+        console.error('Error sending newsletter email:', emailError)
+        // Continue processing even if email sending fails
+      }
+
+      return NextResponse.json({
+        success: true,
+        blogPost,
+        message: 'Blog post created successfully'
+      })
+
     } catch (createError) {
       console.error('Database error during blog post creation:', createError)
       return NextResponse.json(
@@ -114,12 +150,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
-
-    return NextResponse.json({
-      success: true,
-      blogPost,
-      message: 'Blog post created successfully'
-    })
 
   } catch (error) {
     console.error('Create blog post error:', error)
