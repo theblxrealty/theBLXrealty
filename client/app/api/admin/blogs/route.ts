@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { verifyToken } from '@/lib/auth'
-import { sendEmail } from '@/lib/email'
+import { sendNewsletterEmail } from '@/lib/email'
 
 // POST - Create a new blog post
 export async function POST(request: NextRequest) {
@@ -119,16 +119,13 @@ export async function POST(request: NextRequest) {
         const blogPostUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${blogPost.slug}`
 
         for (const subscriber of subscribers) {
-          await sendEmail({
-            to: subscriber.email,
-            subject: `New Blog Post: ${blogPost.title}`,
-            html: `
-              <h1>${blogPost.title}</h1>
-              <p>${blogPost.excerpt || 'Read our latest blog post!'}</p>
-              <a href="${blogPostUrl}">Read More</a>
-              <p>You received this email because you subscribed to our newsletter. </p>
-              <p>To unsubscribe, please visit: <a href="${process.env.NEXT_PUBLIC_BASE_URL}/newsletter/unsubscribe">Unsubscribe</a></p>
-            `
+          await sendNewsletterEmail({
+            subscriberEmail: subscriber.email,
+            blogTitle: blogPost.title,
+            blogExcerpt: blogPost.excerpt || '',
+            blogUrl: blogPostUrl,
+            category: blogPost.category || 'General',
+            publishedDate: blogPost.publishedAt ? new Date(blogPost.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : new Date(blogPost.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
           })
         }
         console.log(`Sent new blog post notification to ${subscribers.length} subscribers.`)
