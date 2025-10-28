@@ -224,7 +224,7 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-4xl font-bold mb-6 text-black" style={{fontFamily: 'Tiempos Headline, serif', fontWeight: '400'}}>Why Choose The BLX Realty</h2>
             <p className="text-lg text-gray-500 mb-8 font-['Suisse_Intl',sans-serif] max-w-3xl mx-auto">
               Bengaluru's & London's premier luxury property marketplace connecting discerning buyers and sellers across
-              residential, commercial, and investment properties. Where BLX Realty has become NRI's favorite property search hub helping accross borders.
+              residential, commercial,  and investment properties. Where BLX Realty has become NRI's favorite property search hub helping accross borders.
 
             </p>
           </div>
