@@ -116,7 +116,7 @@ export default function HomePage() {
             <div className="order-1 lg:order-2">
               <h2 className="text-4xl md:text-4xl font-bold mb-6 text-black" style={{fontFamily: 'Tiempos Headline, serif', fontWeight: '400'}}>Dream properties</h2>
               <p className="text-lg text-gray-500 mb-8 font-['Suisse_Intl',sans-serif]">
-                Your vision of a perfect home is our blueprint for action. The BLX Realty is dedicated to turning aspirations into addresses, with passion, precision, and personalized care.
+                Your vision of a perfect home is our blueprint for action. The BLX Realty is dedicated to turning  aspirations into addresses, with passion, precision, and personalized care.
               </p>
               <div className="space-y-8">
                 <Link href="/contact" className="group cursor-pointer block">
